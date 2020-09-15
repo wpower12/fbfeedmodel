@@ -1,7 +1,7 @@
 {
-  "name": "js_template_wpower3",
+  "name": "fbfeedmodel",
   "version": "1.0.0",
-  "description": "Webpack js project template.",
+  "description": "Hypothetical model of opinion dynamics over a feed simulation.",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
