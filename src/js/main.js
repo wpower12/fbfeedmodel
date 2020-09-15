@@ -1,10 +1,10 @@
 import G6 from '@antv/g6';
 
 var BA = require("./Graphs/BAGen").default;
+var addRandomOpinions = require("./Models/Opinion").default;
 
-var randomBAg = BA(2, 2, 25);
+var randomBAg = BA(2, 2, 50);
 
-console.log(randomBAg);
 
 const graph = new G6.Graph({
     container: 'mountNode', // String | HTMLElement, required, the id of DOM element or an HTML node
@@ -30,5 +30,7 @@ const graph = new G6.Graph({
 	  },
 });
 
+addRandomOpinions(randomBAg);
+console.log(randomBAg);
 graph.data(randomBAg);
 graph.render();
