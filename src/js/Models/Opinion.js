@@ -1,3 +1,4 @@
+// For now just picks a random color. Needs to be a value eventually. 
 function addRandomOpinions(graph_obj){
 	var colors = ["#F40101",
 				  "#F41111",
