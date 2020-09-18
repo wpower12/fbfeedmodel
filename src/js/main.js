@@ -1,5 +1,5 @@
 import G6 from '@antv/g6';
-import addRandomOpinions from './Models/Opinion';
+import {assignRandomOpinions, assignOpinionHue} from './Models/Opinion';
 import BAGen from './Graphs/BAGen';
 
 const graph = new G6.Graph({
@@ -19,8 +19,8 @@ const graph = new G6.Graph({
 });
 
 var randomBAg = BAGen(2, 2, 50);
-addRandomOpinions(randomBAg);
-
+assignRandomOpinions(randomBAg);
+assignOpinionHue(randomBAg);
 console.log(randomBAg);
 
 graph.data(randomBAg);
