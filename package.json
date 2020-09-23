@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "copy": "cp src/css/styles.css dist/styles/styles.css && cp src/index.html dist/index.html",
-    "build": "webpack && cp src/css/styles.css dist/styles/styles.css && cp src/index.html dist/index.html"
+    "copy": "cp src/css/styles.css dist/styles/fbfeedstyles.css && cp src/index.html dist/fbfeed.html",
+    "build": "webpack && cp src/css/styles.css dist/styles/fbfeedstyles.css && cp src/index.html dist/fbfeed.html"
   },
   "author": "wpower12",
   "license": "ISC",
