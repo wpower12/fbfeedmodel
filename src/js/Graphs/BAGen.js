@@ -11,7 +11,7 @@ function rouletteSelect(nodes, total_edges){
 function formatG6JSON(node_list, edge_list){
 	var graphData = {nodes: [], edges: []};
 	for (var i = 0; i < node_list.length; i++) {
-		graphData.nodes.push({id: i.toString(), label: "n"+i.toString()});
+		graphData.nodes.push({id: i.toString(), label: "n"+i.toString(), neighbors: []});
 	}
 
 	for (var e = 0; e < edge_list.length; e++) {
@@ -19,7 +19,13 @@ function formatG6JSON(node_list, edge_list){
 		graphData.edges.push({source: edge[0].toString(), 
 							  target: edge[1].toString(), 
 							  style: {lineWidth: 3, 
-							  		  stroke: "black"}}); 
+							  		  stroke: "black"}});
+		if(!(edge[0] in graphData.nodes[edge[1]].neighbors)) {
+			graphData.nodes[edge[1]].neighbors.push(edge[0]);
+		}
+		if(!(edge[1] in graphData.nodes[edge[0]].neighbors)) {
+			graphData.nodes[edge[0]].neighbors.push(edge[1]);
+		}
 	}
 	return graphData;
 }
