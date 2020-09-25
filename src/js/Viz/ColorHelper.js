@@ -16,6 +16,13 @@ export function assignOpinionHue(graph_JSON){
 	}
 }
 
+export function updateNodeStyles(graph_JSON){
+	for (var n = 0; n < graph_JSON.nodes.length; n++) {
+		var node_JSON = graph_JSON.nodes[n];
+		node_JSON.style.fill = getColorFromScale(node_JSON.opinion);
+	}
+}
+
 export function getColorFromScale(value){
 	return COLORS[scaleValToInt(value, -1.0, 1.0, 0, COLORS.length-1)]
 }

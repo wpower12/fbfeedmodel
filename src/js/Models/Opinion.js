@@ -1,5 +1,3 @@
-import {assignOpinionHue, getColorFromScale} from './ColorHelper'
-
 var PD = require("probability-distributions");
 
 // ** Model Methods
@@ -18,13 +16,6 @@ export function tick(graph_JSON, outlets, mod_rate){
 	var sampledArticles = sampleOutlets(outlets, 3);
 	updateFeeds(graph_JSON, sampledArticles, outlets);
 	updateOpinionsFromFeeds(graph_JSON, mod_rate);
-}
-
-export function updateNodeStyles(graph_JSON){
-	for (var n = 0; n < graph_JSON.nodes.length; n++) {
-		var node_JSON = graph_JSON.nodes[n];
-		node_JSON.style.fill = getColorFromScale(node_JSON.opinion);
-	}
 }
 
 export function updateOpinionsFromFeeds(graph_JSON, mod_rate){

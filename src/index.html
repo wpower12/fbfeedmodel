@@ -5,16 +5,18 @@
 	<title>FB Opinion Dynamics</title>
 	<meta name="description" content="A hypothetical simulation of FB opinion dynamics.">
 	<meta name="author" content="wpower12">
-	<link rel="stylesheet" href="../styles/styles.css">
+	<link rel="stylesheet" href="./styles/styles.css">
 </head>
 <body>
 <div id="mountNode"></div>
 <div id="controls">
-	<button id="btn_updatefeeds">Update Feeds</button>
+	<button id="btn_updatefeeds">Update Articles and Feeds</button>
 </div>
+<div id="oa_chart" style="width:90%;height:250px;"></div>
 <div id="feeds"></div>
 </body>
 <footer>
+	<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 	<script src="js/fbfeedbundle.js"></script>
 </footer>
 </html>
