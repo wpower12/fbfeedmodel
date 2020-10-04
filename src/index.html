@@ -64,6 +64,8 @@
 <p>In other words, when the model is operating in 'biased' mode, each time an article is checked to see if it will be 'seen' by the user, we select a random value from [0,1] and compare this to a 'scaled' chance-to-be-seen. This value is 1.0 exactly when the articles opinion is equal to the bias opinion, and scales to (1 - intensity) as the articles opinion moves further away. This means, with the default intensity of 0.1, that at worst an article still has a 90% chance to be seen by the user.</p>
 
 <p>Even with a small value like 0.1, this still is enough of a bias to push the model to converge to that 'side' of the opinion space. Without the bias value, you can see that the simulation either 'randomly' selects a winner, or oscillates between the two 'camps'.</p>
+
+<p>Code for this project can be found <a href="https://github.com/wpower12/fbfeedmodel">here</a>.</p>
 	</div>
 </div>
 
