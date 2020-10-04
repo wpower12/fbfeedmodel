@@ -5,15 +5,68 @@
 	<title>FB Opinion Dynamics</title>
 	<meta name="description" content="A hypothetical simulation of FB opinion dynamics.">
 	<meta name="author" content="wpower12">
-	<link rel="stylesheet" href="./styles/styles.css">
+	<link rel="stylesheet" href="./styles/fbfeedstyles.css">
 </head>
 <body>
-<div id="mountNode"></div>
-<div id="controls">
-	<button id="btn_updatefeeds">Update Articles and Feeds</button>
+<div class="wrapper">
+	<div id="mountNode"></div>
+	<div id="controls">
+		<div class="ctrls newSim">
+			<label for="num_user"># of Users<br>
+				<input type="number" id="num_user"    min="10"    max="30"  step="1"   value="25">
+			</label>			
+			<br>
+			<label for="num_outlets"># of Outlets<br>
+				<input type="number" id="num_outlets" min="2"     max="4"   step="1"   value="2">
+			</label>			
+			<br>
+			<label for="var_outlets">Variance of Outlet Articles<br>
+				<input type="number" id="var_outlets" min="0.0001" max="0.1" step="any" value="0.01">
+			</label>
+ 			<br>
+			<button id="btn_newsim">New Simulation</button>
+		</div>
+		<br>
+		<div class='ctrls manip'>
+			<input type="checkbox" id="check_bias" name="check_bias">
+			<label for="check_bias">Bias Article Visibility</label>
+			<br>
+			<label for="value_bias">Bias Opinion</label>
+			<input type="number" id="value_bias" min="-1.0" max="1.0" step="any" value="1.0" disabled=true>
+			<br>
+			<label for="value_intensity">Bias Intensity</label>
+			<input type="number" id="value_intensity" min="0.0" max="1.0" step="any" value="0.1" disabled=true>
+			<br>
+			<button id="btn_save_bias" disabled=true>Save Bias Values</button>
+		</div>
+		<br>	
+		<div class='ctrls curSim'>
+			<button id="btn_updatefeeds">Update Simulation</button>
+		</div>
+	</div>
+	<div id="oa_chart"></div>
+<!-- 	<div id="manip_controls"></div> -->
+	<div id="words">
+<p>Social Networks have changed the pace, scale, and complexity of opinion dynamics. The manner and models of how someone might ‘change their opinion’ now operate within systems that can expose a user to a larger number of viewpoints than ever before. Not only that, but these systems manage the exposure of opinions. The possible viewpoints a user might see is the output of an algorithm. One that must select from a large set of possible viewpoints, and present the user with a small subset.</p>
+
+<p>This page is an attempt to show a hypothetical model of opinion dynamics on a social network, and how subtle changes to its parameters can result in a dramatic shift in the distribution of opinions within the network.</p>
+
+<p>This model assumes that an opinion can be represented by a value in the range [-1.0, 1.0]. Further, it assumes that every ‘day’ (click of the update button), a user is exposed to a set of ‘articles’ from a variety of news outlets. Users all first select a set of articles from the ‘nearest’ news outlet, the one whose mean opinion is closest to the user's opinion. Then, each User is ‘exposed’ to their selected articles, and the selected articles of all their neighbors in the social network. </p>
+
+<p>Each article in this set represents a chance for the user to change their opinion. In this model, the chance that a user will update their opinion based on an article is dependent on a random value selected for each User; their susceptibility. This value is chosen at the start of the simulation, from the range U(0,1). Higher values represent a User who is more likely to modify their opinion, and smaller vice versa. </p>
+
+<p>During each update, the User ‘rolls a die’, (selects a random value from U(0,1)), and if it is lower than their susceptibility, the opinion for the User is modified. The modification is proportional to the difference between the opinion of the user, and the article's opinion. Essentially 'nudging' their opinion closer to the value of the articles opinion.</p>
+
+<p>The initial graph of users is randomly generated according to the Barbassi-Albert method. This is done to create a network of users with a ‘power law’ degree distribution. Such a distribution is the ‘hallmark’ of social networks, and leads to interesting results related to their moments.</p>
+
+<p>To highlight a possible ‘attack’ that a network owner might attempt, this model allows you to select a ‘bias goal opinion’.  When set, this changes the manner in which articles are ‘shared’ between users. When a User looks at the articles of their neighbors, the model will draw from a bernoulli distribution to decide if the article is ‘seen’ by the User. The rate of this distribution is inversely proportional to the distance between the articles opinion and the bias opinion value.</p>
+
+<p>In other words, when the model is operating in 'biased' mode, each time an article is checked to see if it will be 'seen' by the user, we select a random value from [0,1] and compare this to a 'scaled' chance-to-be-seen. This value is 1.0 exactly when the articles opinion is equal to the bias opinion, and scales to (1 - intensity) as the articles opinion moves further away. This means, with the default intensity of 0.1, that at worst an article still has a 90% chance to be seen by the user.</p>
+
+<p>Even with a small value like 0.1, this still is enough of a bias to push the model to converge to that 'side' of the opinion space. Without the bias value, you can see that the simulation either 'randomly' selects a winner, or oscillates between the two 'camps'.</p>
+	</div>
 </div>
-<div id="oa_chart" style="width:90%;height:250px;"></div>
-<div id="feeds"></div>
+
 </body>
 <footer>
 	<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>

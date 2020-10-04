@@ -1,62 +1,49 @@
-import G6 from '@antv/g6';
-import Plotly from 'plotly.js/dist/plotly';
-import * as Op      from './Models/Opinion';
-import * as FeedViz from './Viz/FeedViz';
-import * as OAViz   from './Viz/OutletViz';
-import * as Color   from './Viz/ColorHelper';
-import BAGen from './Graphs/BAGen';
+import SNSimulation from './SNSimulation'
 
-// Initialize the graph_JSON with a random BA network. 
-var graph_JSON = BAGen(2, 2, 50); 
-Op.assignRandomOpinions(graph_JSON);
-Color.assignOpinionHue(graph_JSON);
+var sns = new SNSimulation();
 
-// Create Outlets and initialize Feeds, add initial articles.
-const NUM_ARTICLES = 5;
-const random_outlets = Op.generateOutlets(3, -1, 1, 0.1);
-var articles = Op.sampleOutlets(random_outlets, NUM_ARTICLES);
-Op.initializeFeeds(graph_JSON);
-Op.updateFeeds(graph_JSON, articles, random_outlets);
+// New Sim Controls
+const btn_newsim = document.getElementById("btn_newsim");
+btn_newsim.onclick = function(){
+	console.log("initializing new simulation");
+	sns.NUM_USERS   = document.getElementById("num_user").value;
+	sns.NUM_OUTLETS = document.getElementById("num_outlets").value;
+	sns.OUTLET_VAR  = document.getElementById("var_outlets").value;
 
-// Setup feed 'rendering' for all the nodes in the network.
-var feed_list = document.createElement("ul");
-feed_list.style.columns = 3;
-var feed_container = document.getElementById("feeds");
-feed_container.append(feed_list);
-FeedViz.renderFeedItems(feed_list, graph_JSON); // Initial rendering. 
+	document.getElementById("mountNode").innerHTML = "";
+	document.getElementById("oa_chart").innerHTML  = "";
 
-// Build, Associate with Data, and Initial Render of the G6.Graph
-const graph = new G6.Graph({
-    container: 'mountNode', 
-    width: 800,  
-    height: 500, 
-	layout: {
-	    type: 'fruchterman', // TODO - Better layout possible?
-	    center: [200, 200], 
-	    gravity: 5,
-	    speed: 2,
-	    clustering: true,
-	    clusterGravity: 10,
-	    maxIteration: 1000,
-	    workerEnabled: true, 
-	  },
-});
-graph.data(graph_JSON); 	// Note, this is a 'two-way' association. New .render() calls will
-graph.render();				// operate on the graph_JSON data, which we can update elsewhere.
+	sns.initializeSimulation();
+};
 
-// Get outlet/article chart context.
-var plot_ctx = document.getElementById("oa_chart");
-OAViz.renderOutletsAndArticles(random_outlets, articles, plot_ctx);
+const btn_update = document.getElementById("btn_updatefeeds");
+btn_update.onclick = function(){
+	console.log("updating current simulation");
+	sns.updateCurrentSimulation();
+};
 
-// Update Simulation Button
-var button_obj = document.getElementById("btn_updatefeeds");
-button_obj.onclick = function(){
-	articles = Op.sampleOutlets(random_outlets, NUM_ARTICLES);
-	Op.updateFeeds(graph_JSON, articles, random_outlets);
-	feed_list.innerHTML = "";
-	FeedViz.renderFeedItems(feed_list, graph_JSON);
-	Op.updateOpinionsFromFeeds(graph_JSON, 0.1);
-	Color.updateNodeStyles(graph_JSON);
-	graph.render();
-	OAViz.renderOutletsAndArticles(random_outlets, articles, plot_ctx);
+const obj_check_bias = document.getElementById("check_bias");
+const obj_value_bias = document.getElementById("value_bias");
+const obj_value_intn = document.getElementById("value_intensity");
+const btn_save_bias  = document.getElementById("btn_save_bias");
+
+obj_check_bias.onchange = function(){
+	if(obj_check_bias.checked){
+		sns.BIASED = true;
+		sns.BIAS_VALUE = obj_value_bias.value;
+		sns.BIAS_INTENSITY = obj_value_intn.value;
+		obj_value_bias.disabled = false;
+		obj_value_intn.disabled = false;
+		btn_save_bias.disabled = false;
+	} else {
+		sns.BIASED = false;
+		obj_value_bias.disabled = true;
+		obj_value_intn.disabled = true;
+		btn_save_bias.disabled = true;
+	}
+};
+
+btn_save_bias.onclick = function(){
+	sns.BIAS_VALUE = obj_value_bias.value;
+	sns.BIAS_INTENSITY = obj_value_intn.value;
 }

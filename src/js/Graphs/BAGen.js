@@ -1,36 +1,5 @@
-function rouletteSelect(nodes, total_edges){
-	var rand_val = Math.floor(2*Math.random()*total_edges);
-	for (var i = 0; i < nodes.length; i++) {
-		rand_val -= nodes[i];
-		if(rand_val < 0){
-			return i;
-		}
-	}
-}
 
-function formatG6JSON(node_list, edge_list){
-	var graphData = {nodes: [], edges: []};
-	for (var i = 0; i < node_list.length; i++) {
-		graphData.nodes.push({id: i.toString(), label: "n"+i.toString(), neighbors: []});
-	}
-
-	for (var e = 0; e < edge_list.length; e++) {
-		var edge = edge_list[e];
-		graphData.edges.push({source: edge[0].toString(), 
-							  target: edge[1].toString(), 
-							  style: {lineWidth: 3, 
-							  		  stroke: "black"}});
-		if(!(edge[0] in graphData.nodes[edge[1]].neighbors)) {
-			graphData.nodes[edge[1]].neighbors.push(edge[0]);
-		}
-		if(!(edge[1] in graphData.nodes[edge[0]].neighbors)) {
-			graphData.nodes[edge[0]].neighbors.push(edge[1]);
-		}
-	}
-	return graphData;
-}
-
-function BAGen(num_initial, edges_added, max_nodes) {
+export default function BAGen(num_initial, edges_added, max_nodes) {
 	var nodes = Array(); // Will hold edge count, index is node_id
 	var edges = Array(); // List of pairs (n_id_0, n_id_1)
 	var total_edges = 0;
@@ -45,10 +14,11 @@ function BAGen(num_initial, edges_added, max_nodes) {
 	for (var i = num_initial; i < max_nodes; i++) {
 		nodes.push(0); 
 		// Check to see if you add edges. 
+		var added_ids = [i];
 		for (var j = 0; j < edges_added; j++) {
-			// Todo - Handle duplicate edges?
-			var edge_to_id = rouletteSelect(nodes, total_edges);
+			var edge_to_id = rouletteSelect(nodes, total_edges, added_ids);
 			edges.push([i, edge_to_id]);
+			added_ids.push(edge_to_id);
 			nodes[i] += 1;
 			nodes[edge_to_id] += 1;
 			total_edges += 1;
@@ -56,4 +26,55 @@ function BAGen(num_initial, edges_added, max_nodes) {
 	}
 	return formatG6JSON(nodes, edges);
 }
-export default BAGen;
+
+function rouletteSelect(nodes, total_edges, ignore_list){
+	// First we adjust total_edges by subtractin the counts for all nodes in the ignore list
+	for (var i = 0; i < ignore_list.length; i++) {
+		total_edges -= ignore_list[i];
+	}
+
+	var rand_val = Math.floor(2*Math.random()*total_edges);
+	for (var i = 0; i < nodes.length; i++) {
+		if( !ignore_list.includes(i)){
+			rand_val -= nodes[i];
+			if(rand_val < 0){
+				return i;
+			}
+		}
+	}
+}
+
+function formatG6JSON(node_list, edge_list){
+	var graphData = {nodes: [], edges: []};
+	for (var i = 0; i < node_list.length; i++) {
+		graphData.nodes.push({id: i.toString(), 
+							  label: i.toString(), 
+							  labelCfg: {
+							  	style: {
+							  		// lineWidth: 1,
+							  		fontSize: 14,
+							  		fill: "dark grey"
+							  	}
+							  },
+							  neighbors: [],
+							  size: 25,
+							  style: {
+							  	stroke: "dark grey",
+							  }});
+	}
+
+	for (var e = 0; e < edge_list.length; e++) {
+		var edge = edge_list[e];
+		graphData.edges.push({source: edge[0].toString(), 
+							  target: edge[1].toString(), 
+							  style: {lineWidth: 1, 
+							  		  stroke: "grey"}});
+		if(!(edge[0] in graphData.nodes[edge[1]].neighbors)) {
+			graphData.nodes[edge[1]].neighbors.push(edge[0]);
+		}
+		if(!(edge[1] in graphData.nodes[edge[0]].neighbors)) {
+			graphData.nodes[edge[0]].neighbors.push(edge[1]);
+		}
+	}
+	return graphData;
+}

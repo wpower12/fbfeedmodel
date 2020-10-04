@@ -1,21 +1,19 @@
-import Plotly from 'plotly.js/dist/plotly';
+// import Plotly from 'plotly.js/dist/plotly';
 import * as Color   from './ColorHelper';
 
 export function renderOutletsAndArticles(outlets, articles, ctx){
 	var outlet_dists = getOutletDistShapeData(outlets);
 	var article_data = getArticleData(articles, outlets);
 	var full_data = outlet_dists.concat(article_data);
-
 	var config = {
 					margin: { t: 0 }, 
 					paper_bgcolor: "#e6e6e6",
 					plot_bgcolor:   "#e6e6e6",
 					staticPlot: true,
+					showLegend: false,
 					xaxis: {range: [-1.1, 1.1]},
 					yaxis: {range: [ 0.0, 1.1]},
 				};
-
-
 	Plotly.newPlot( ctx, full_data, config);
 }
 
